@@ -37,6 +37,9 @@ package org.springframework.core.env;
  * @see Environment
  * @see ConfigurableEnvironment
  * @see org.springframework.context.ConfigurableApplicationContext#getEnvironment()
+ *
+ * Spring中所有的应用上下文类都实现了此接口
+ *
  */
 public interface EnvironmentCapable {
 

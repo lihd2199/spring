@@ -76,10 +76,20 @@ public abstract class AbstractXmlApplicationContext extends AbstractRefreshableC
 	 * @see org.springframework.beans.factory.xml.XmlBeanDefinitionReader
 	 * @see #initBeanDefinitionReader
 	 * @see #loadBeanDefinitions
+	 *
+	 *
+	 *
+	 * 加载BeanDefinitions
+	 * 1、为刚刚创建的 beanFactory 创建一个  BeanDefinitionReader（XmlBeanDefinitionReader extend AbstractBeanDefinitionReader）
+	 * 2、使用此上下文的配置 beanDefinitionReader
+	 * 3、当前上下文 实现了 ResourceLoader 接口
+	 * 4、加载 beanDefinitions 将 BeanDefinition 注册到 Registry DefaultListableBeanFactory
 	 */
 	@Override
 	protected void loadBeanDefinitions(DefaultListableBeanFactory beanFactory) throws BeansException, IOException {
 		// Create a new XmlBeanDefinitionReader for the given BeanFactory.
+
+		//为刚刚创建的beanFactory创建一个BeanDefinitionReader（XmlBeanDefinitionReader）
 		XmlBeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(beanFactory);
 
 		// Configure the bean definition reader with this context's
@@ -89,8 +99,9 @@ public abstract class AbstractXmlApplicationContext extends AbstractRefreshableC
 		beanDefinitionReader.setEntityResolver(new ResourceEntityResolver(this));
 
 		// Allow a subclass to provide custom initialization of the reader,
-		// then proceed with actually loading the bean definitions.
+		//允许子类提供reader的自定义初始化
 		initBeanDefinitionReader(beanDefinitionReader);
+		// then proceed with actually loading the bean definitions.
 		loadBeanDefinitions(beanDefinitionReader);
 	}
 

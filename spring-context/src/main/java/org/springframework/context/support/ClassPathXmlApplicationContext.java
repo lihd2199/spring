@@ -140,6 +140,8 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
 
 		super(parent);
 		setConfigLocations(configLocations);
+
+		//所有的操作都是再refresh中
 		if (refresh) {
 			refresh();
 		}

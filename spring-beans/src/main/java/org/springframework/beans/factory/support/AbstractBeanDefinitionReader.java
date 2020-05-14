@@ -79,6 +79,12 @@ public abstract class AbstractBeanDefinitionReader implements EnvironmentCapable
 	 * in the form of a BeanDefinitionRegistry
 	 * @see #setResourceLoader
 	 * @see #setEnvironment
+	 *
+	 *
+	 * 1、赋值注册 DefaultListableBeanFactory
+	 * 2、赋值资源加载器 DefaultResourceLoader
+	 * 3、赋值环境信息
+	 *
 	 */
 	protected AbstractBeanDefinitionReader(BeanDefinitionRegistry registry) {
 		Assert.notNull(registry, "BeanDefinitionRegistry must not be null");
@@ -178,7 +184,9 @@ public abstract class AbstractBeanDefinitionReader implements EnvironmentCapable
 		return this.beanNameGenerator;
 	}
 
-
+	/**
+	 * 加载资源
+	 */
 	@Override
 	public int loadBeanDefinitions(Resource... resources) throws BeanDefinitionStoreException {
 		Assert.notNull(resources, "Resource array must not be null");

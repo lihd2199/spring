@@ -119,6 +119,20 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	 * This implementation performs an actual refresh of this context's underlying
 	 * bean factory, shutting down the previous bean factory (if any) and
 	 * initializing a fresh bean factory for the next phase of the context's lifecycle.
+	 *
+	 *
+	 * 创建处理 BeanFactory 和 BeanDefinition
+	 *
+	 * 1、创建 BeanFactory （如果已经有了就先销毁） DefaultListableBeanFactory
+	 * 		1.1、DefaultListableBeanFactory  有注册  BeanDefinition 的功能 实现 BeanDefinitionRegistry 接口
+	 * 2、定制 BeanFactory
+	 * 		2.1、是否可以循环依赖
+	 * 		2.2、是否可以覆盖
+	 * 3、加载 BeanDefinition 将所有的BeanDefinition加载到上下文中
+	 * 		注册器：DefaultListableBeanFactory   资源加载器：ClassPathXmlApplicationContext  环境信息
+	 *
+	 *
+	 *
 	 */
 	@Override
 	protected final void refreshBeanFactory() throws BeansException {
@@ -127,9 +141,13 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 			closeBeanFactory();
 		}
 		try {
+			// 返回DefaultListableBeanFactory
 			DefaultListableBeanFactory beanFactory = createBeanFactory();
+			// 设置序列化id
 			beanFactory.setSerializationId(getId());
+			// 设置循环依赖、依赖覆盖等
 			customizeBeanFactory(beanFactory);
+			// 加载BeanDefinitions  （非常麻烦）
 			loadBeanDefinitions(beanFactory);
 			synchronized (this.beanFactoryMonitor) {
 				this.beanFactory = beanFactory;
@@ -189,7 +207,13 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	protected void assertBeanFactoryActive() {
 	}
 
+
 	/**
+	 * 这个方法就是为当前上下文创建一个内部的bean工厂。每次调用refresh()方法是都会创建尝试创建。
+	 * 默认实现是创建一个DefaultListableBeanFactory。
+	 * 并通过getInternalParentBeanFactory（）获取内部bean工厂来作为父级bean工厂。
+	 * 可以在子类中重写，例如自定义DefaultListableBeanFactory的设置。
+	 *
 	 * Create an internal bean factory for this context.
 	 * Called for each {@link #refresh()} attempt.
 	 * <p>The default implementation creates a
