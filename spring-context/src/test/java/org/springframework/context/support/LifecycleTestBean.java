@@ -17,10 +17,12 @@
 package org.springframework.context.support;
 
 import org.springframework.context.Lifecycle;
+import org.springframework.stereotype.Service;
 
 /**
  * @author Mark Fisher
  */
+@Service
 public class LifecycleTestBean implements Lifecycle {
 
 	private static int startCounter;
