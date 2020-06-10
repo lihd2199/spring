@@ -566,18 +566,18 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * 当前上下文：
 	 * 1、准备工作 更改状态  设置上下文环境 为当前环境必要参数校验  初始化监听？和事件？
 	 * 2、持有一个BeanFactory （ConfigurableListableBeanFactory ==> DefaultListableBeanFactory）
-	 * 2、1 创建 beanFactory
-	 * 2、2 BeanFactory 设置是否可以覆盖	BeanDefinition 是否可以循环依赖
-	 * 2、3 创建一个 服务于beanFactory 的 BeanDefinitionReader（XmlBeanDefinitionReader extend AbstractBeanDefinitionReader）
-	 * 2、7 加载 beanDefinitions 将 BeanDefinition 注册到 BeanDefinitionRegistry （DefaultListableBeanFactory）
+	 * <pre>2、1 创建 beanFactory</pre>
+	 * <pre>2、2 BeanFactory 设置是否可以覆盖	BeanDefinition 是否可以循环依赖<pre>
+	 * <pre>2、3 创建一个 服务于beanFactory 的 BeanDefinitionReader（XmlBeanDefinitionReader extend AbstractBeanDefinitionReader）<pre>
+	 * <pre>2、4 加载 beanDefinitions 将 BeanDefinition 注册到 BeanDefinitionRegistry （DefaultListableBeanFactory）<pre>
 	 * 3、准备BeanFactory (设置类加载器 设置Aware)
 	 * 4、钩子函数 允许上下文的子类 postProcess
 	 * 5、PostProcessors
-	 * 5.1执行 BeanFactoryPostProcessors BeanFactory的通知？
-	 * 5.2执行 BeanPostProcessors BeanFactory的通知？
+	 * <pre>5.1执行 BeanFactoryPostProcessors BeanFactory的通知？<pre>
+	 * <pre>5.2执行 BeanPostProcessors BeanFactory的通知？<pre>
 	 * 6、注册监听等
 	 * 7、事件广播
-	 * 8、初始胡bean
+	 * 8、初始化bean
 	 */
 	@Override
 	public void refresh() throws BeansException, IllegalStateException {
@@ -672,7 +672,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		initPropertySources();
 
 		// 验证所有标记为required的属性 默认是没有的，可以扩展该类手动添加
-		// see ConfigurablePropertyResolver#setRequiredProperties
+		// @see ConfigurablePropertyResolver#setRequiredProperties
 		getEnvironment().validateRequiredProperties();
 
 		// Store pre-refresh ApplicationListeners...

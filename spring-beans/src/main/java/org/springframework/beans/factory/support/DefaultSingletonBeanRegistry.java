@@ -207,6 +207,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 
 		// is already existed or is currently bean in creating  isSingletonCurrentlyInCreation()
 		// cache singletonsCurrentlyInCreation
+		// if in creating then get from
 		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
 			// cache all singleton instance
 			synchronized (this.singletonObjects) {
