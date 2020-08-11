@@ -156,8 +156,10 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 
 	private boolean autowireCandidate = true;
 
+	//优先注入
 	private boolean primary = false;
 
+	//名字声明，声明后对名字进行使用
 	private final Map<String, AutowireCandidateQualifier> qualifiers = new LinkedHashMap<>();
 
 	@Nullable
@@ -173,12 +175,14 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	@Nullable
 	private String factoryMethodName;
 
+	//构造器的参数
 	@Nullable
 	private ConstructorArgumentValues constructorArgumentValues;
 
 	@Nullable
 	private MutablePropertyValues propertyValues;
 
+	//记录lookup-method 和 replace-method
 	private MethodOverrides methodOverrides = new MethodOverrides();
 
 	@Nullable

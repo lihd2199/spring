@@ -60,6 +60,8 @@ public class BeanDefinitionReaderUtils {
 		GenericBeanDefinition bd = new GenericBeanDefinition();
 		bd.setParentName(parentName);
 		if (className != null) {
+			//如果类加载器不为空，则使用该加载器加载类对象
+			//否则只记录类名称
 			if (classLoader != null) {
 				bd.setBeanClass(ClassUtils.forName(className, classLoader));
 			}
