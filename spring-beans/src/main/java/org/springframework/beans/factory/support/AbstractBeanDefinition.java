@@ -1082,6 +1082,13 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	 * Validate and prepare the given method override.
 	 * Checks for existence of a method with the specified name,
 	 * marking it as not overloaded if none found.
+	 *
+	 * 在Spring配置中存在lookup-method和replace-method两个配置功能，
+	 * 而这两个配置的加载其实就是将配置统一存放在BeanDefinition中的methodOverrides属性里，
+	 * 这两个功能实现原理其实是在bean实例化的时候如果检测到存在methodOverrides属性，
+	 * 会动态地为当前bean生成代理并使用对应的拦截器为bean做增强处理，
+	 * 相关逻辑实现在bean的实例化部分详细介绍。
+	 *
 	 * @param mo the MethodOverride object to validate
 	 * @throws BeanDefinitionValidationException in case of validation failure
 	 */
@@ -1094,6 +1101,8 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 		}
 		else if (count == 1) {
 			// Mark override as not overloaded, to avoid the overhead of arg type checking.
+			// 如果当前类中的方法只有一个，那么就设置重载该方法没有被重载，
+			// 这样在后续调用的时候便可以直接使用找到的方法，而不需要进行方法的参数匹配验证了
 			mo.setOverloaded(false);
 		}
 	}

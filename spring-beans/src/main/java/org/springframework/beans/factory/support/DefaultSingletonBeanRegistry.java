@@ -72,26 +72,33 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 
 	/**
 	 * Cache of singleton objects: bean name --> bean instance
+	 *  用于保存BeanName和创建bean实例之间的关系，
 	 */
 	private final Map<String, Object> singletonObjects = new ConcurrentHashMap<>(256);
 
 	/**
 	 * Cache of singleton factories: bean name --> ObjectFactory
+	 *  用于保存BeanName和创建bean的工厂之间的关系
 	 */
 	private final Map<String, ObjectFactory<?>> singletonFactories = new HashMap<>(16);
 
 	/**
 	 * Cache of early singleton objects: bean name --> bean instance
+	 *  也是保存BeanName和创建bean实例之间的关系，与singletonObjects的不同之处在于，
+	 *  当一个单例bean被放到这里面后，那么当bean还在创建过程中，就可以通过getBean方法获取到了，
+	 *  其目的是用来检测循环引用。
 	 */
 	private final Map<String, Object> earlySingletonObjects = new HashMap<>(16);
 
 	/**
 	 * Set of registered singletons, containing the bean names in registration order
+	 *  用来保存当前所有已注册的bean。
 	 */
 	private final Set<String> registeredSingletons = new LinkedHashSet<>(256);
 
 	/**
 	 * Names of beans that are currently in creation
+	 *  记录正在创建中的bean
 	 */
 	private final Set<String> singletonsCurrentlyInCreation =
 			Collections.newSetFromMap(new ConcurrentHashMap<>(16));
@@ -203,6 +210,8 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 	 */
 	@Nullable
 	protected Object getSingleton(String beanName, boolean allowEarlyReference) {
+
+		//检测缓存中是否存在实例
 		Object singletonObject = this.singletonObjects.get(beanName);
 
 		// is already existed or is currently bean in creating  isSingletonCurrentlyInCreation()
@@ -211,12 +220,16 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 		if (singletonObject == null && isSingletonCurrentlyInCreation(beanName)) {
 			// cache all singleton instance
 			synchronized (this.singletonObjects) {
-				// Cache of early singleton objects
+				//判断bean是不是正在被加载
 				singletonObject = this.earlySingletonObjects.get(beanName);
 				if (singletonObject == null && allowEarlyReference) {
+					//当某些方法需要提前初始化的时候则会调用addSingletonFactory 将对应的ObjectFactory初始化策略存在singletonFactories中
 					ObjectFactory<?> singletonFactory = this.singletonFactories.get(beanName);
 					if (singletonFactory != null) {
+						//调用预先设定的getObject方法
 						singletonObject = singletonFactory.getObject();
+						//记录在earlySingletonObjects中
+						//earlySingletonObjects 和 singletonFactories 互斥
 						this.earlySingletonObjects.put(beanName, singletonObject);
 						this.singletonFactories.remove(beanName);
 					}
@@ -248,6 +261,7 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 				if (logger.isDebugEnabled()) {
 					logger.debug("Creating shared instance of singleton bean '" + beanName + "'");
 				}
+				//重要：记录加载状态
 				beforeSingletonCreation(beanName);
 				boolean newSingleton = false;
 				boolean recordSuppressedExceptions = (this.suppressedExceptions == null);
@@ -275,9 +289,12 @@ public class DefaultSingletonBeanRegistry extends SimpleAliasRegistry implements
 					if (recordSuppressedExceptions) {
 						this.suppressedExceptions = null;
 					}
+					//重要：移除加载状态
 					afterSingletonCreation(beanName);
 				}
 				if (newSingleton) {
+					//加入到singletonObjects
+					//从singletonFactories、earlySingletonObjects 中移除
 					addSingleton(beanName, singletonObject);
 				}
 			}
