@@ -80,7 +80,7 @@ public abstract class AbstractXmlApplicationContext extends AbstractRefreshableC
 	 *
 	 *
 	 * 加载BeanDefinitions
-	 * 1、为刚刚创建的 beanFactory 创建一个  BeanDefinitionReader（XmlBeanDefinitionReader extend AbstractBeanDefinitionReader）
+	 * 1、创建一个  BeanDefinitionReader（XmlBeanDefinitionReader extend AbstractBeanDefinitionReader）
 	 * 2、使用此上下文的配置 beanDefinitionReader
 	 * 3、当前上下文 实现了 ResourceLoader 接口
 	 * 4、加载 beanDefinitions 将 BeanDefinition 注册到 Registry DefaultListableBeanFactory
@@ -94,12 +94,13 @@ public abstract class AbstractXmlApplicationContext extends AbstractRefreshableC
 
 		// Configure the bean definition reader with this context's
 		// resource loading environment.
+		// 对beanDefinitionReader 进行环境变量的设置
 		beanDefinitionReader.setEnvironment(this.getEnvironment());
 		beanDefinitionReader.setResourceLoader(this);
 		beanDefinitionReader.setEntityResolver(new ResourceEntityResolver(this));
 
 		// Allow a subclass to provide custom initialization of the reader,
-		//for subclass
+		//for subclass 子类
 		initBeanDefinitionReader(beanDefinitionReader);
 		// then proceed with actually loading the bean definitions.
 		loadBeanDefinitions(beanDefinitionReader);
